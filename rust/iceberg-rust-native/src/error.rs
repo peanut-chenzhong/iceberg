@@ -81,6 +81,20 @@ impl Error {
         }
     }
 
+    /// Create a JSON error with custom message
+    pub fn json(message: impl Into<String>) -> Self {
+        Error::Other {
+            message: format!("JSON error: {}", message.into()),
+        }
+    }
+
+    /// Create an IO error with custom message
+    pub fn io(message: impl Into<String>) -> Self {
+        Error::Other {
+            message: format!("I/O error: {}", message.into()),
+        }
+    }
+
     /// Add context to an error
     pub fn with_context(self, context: impl Into<String>) -> Self {
         Error::WithContext {

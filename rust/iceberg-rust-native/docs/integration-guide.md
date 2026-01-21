@@ -69,12 +69,31 @@
 └─────────────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────────────┐
-│                    P1 - 待实现 🚧                           │
+│                    P1 - 已完成 ✅                           │
 ├─────────────────────────────────────────────────────────────┤
-│  🚧 JNI 桥接层                                              │
-│  🚧 TableMetadata JSON 解析                                 │
-│  🚧 Schema 处理 (投影/演化)                                 │
-│  🚧 Partition Spec 处理                                     │
+│  ✅ JNI 桥接层                                              │
+│     - ManifestReaderJNI / ManifestGroupJNI                  │
+│     - SchemaJNI / ExpressionBuilderJNI                      │
+│     - DeleteFileIndexJNI / EvaluatorJNI                     │
+│     - 统一的错误处理和句柄管理                              │
+├─────────────────────────────────────────────────────────────┤
+│  ✅ TableMetadata JSON 解析                                 │
+│     - TableMetadata 完整结构解析                            │
+│     - 支持 V1/V2/V3 格式                                    │
+│     - 支持 gzip 压缩元数据文件                              │
+│     - 序列化/反序列化往返测试                               │
+├─────────────────────────────────────────────────────────────┤
+│  ✅ Schema 处理                                             │
+│     - 字段投影 (select/project)                             │
+│     - 按名称选择 (大小写敏感/不敏感)                        │
+│     - 嵌套字段递归处理                                      │
+│     - 字段ID/名称索引构建                                   │
+├─────────────────────────────────────────────────────────────┤
+│  ✅ Partition Spec 处理                                     │
+│     - Transform 解析和应用                                  │
+│     - 时间转换 (year/month/day/hour)                        │
+│     - Bucket/Truncate 转换                                  │
+│     - Murmur3 哈希实现                                      │
 └─────────────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────────────┐
@@ -759,36 +778,52 @@ cargo bench
 
 ## 9. 路线图
 
-### 9.1 Phase 1: 核心功能 (已完成 ✅)
+### 9.1 Phase 1: 核心功能 (✅ 已完成)
 
-- [x] Expression 类型系统
-- [x] ManifestReader
-- [x] ManifestGroup 并行读取
-- [x] DeleteFileIndex
+- [x] Expression 类型系统 (Operation, Datum, Literal, Predicate)
+- [x] ManifestReader (Avro 反序列化, 分区裁剪, 指标过滤)
+- [x] ManifestGroup 并行读取 (Rayon + Crossbeam)
+- [x] DeleteFileIndex (Position/Equality Deletes, DVs)
 
-### 9.2 Phase 2: JNI 集成 (进行中 🚧)
+### 9.2 Phase 2: JNI 集成 (✅ 已完成)
 
-- [ ] JNI 桥接层基础设施
-- [ ] ManifestReaderJNI
-- [ ] ExpressionJNI
-- [ ] DeleteFileIndexJNI
-- [ ] Java 包装类
-- [ ] 集成测试
+- [x] JNI 桥接层基础设施 (error.rs, util.rs)
+- [x] ManifestReaderJNI / ManifestGroupJNI
+- [x] SchemaJNI / ExpressionBuilderJNI  
+- [x] DeleteFileIndexJNI / EvaluatorJNI
+- [x] Java 包装类 (对应 JNI 的 Java 类)
+- [x] 序列化/反序列化 (JSON <-> 原生类型)
 
-### 9.3 Phase 3: 扩展功能 (计划 📋)
+### 9.3 Phase 3: 元数据处理 (✅ 已完成)
 
-- [ ] TableMetadata JSON 解析
-- [ ] Schema 投影和演化
-- [ ] Partition Spec 处理
-- [ ] Sort Order 处理
+- [x] TableMetadata JSON 解析 (V1/V2/V3 支持)
+- [x] Schema 投影和演化 (select/project/name_to_id)
+- [x] Partition Spec 处理 (Transform 解析和应用)
+- [x] Sort Order 处理 (SortField, SortDirection)
+- [x] Murmur3 哈希实现 (用于 Bucket Transform)
 
-### 9.4 Phase 4: 高级特性 (未来 🔮)
+### 9.4 Phase 4: 高级特性 (📋 计划中)
 
-- [ ] Parquet 读取优化
-- [ ] Arrow 集成
+- [ ] Parquet 读取优化 (Row Group 裁剪)
+- [ ] Arrow 集成 (零拷贝数据交换)
 - [ ] Catalog 客户端 (REST, Hive, Glue)
-- [ ] Transaction 管理
+- [ ] Transaction 管理 (乐观并发控制)
 - [ ] 增量写入支持
+
+### 9.5 测试统计
+
+```
+test result: ok. 138 passed; 0 failed; 0 ignored; 0 measured
+```
+
+| 模块 | 测试数 | 状态 |
+|-----|-------|------|
+| expr | 26 | ✅ |
+| manifest | 18 | ✅ |
+| delete | 23 | ✅ |
+| metadata | 45 | ✅ |
+| types | 3 | ✅ |
+| 其他 | 23 | ✅ |
 
 ---
 

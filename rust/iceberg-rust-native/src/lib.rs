@@ -27,7 +27,11 @@ pub mod delete;
 pub mod error;
 pub mod expr;
 pub mod manifest;
+pub mod metadata;
 pub mod types;
+
+#[cfg(feature = "jni")]
+pub mod jni;
 
 pub use error::{Error, Result};
 pub use expr::{
@@ -39,3 +43,7 @@ pub use expr::{
     Evaluator, Binder,
 };
 pub use delete::{DeleteFileIndex, DeleteFileIndexBuilder, EqualityDeletes, PositionDeletes};
+pub use metadata::{
+    TableMetadata, TableMetadataParser, Schema, SchemaField, NestedField, Type,
+    Snapshot, SnapshotRef, SnapshotLogEntry, PartitionSpec, PartitionField, SortOrder, SortField,
+};

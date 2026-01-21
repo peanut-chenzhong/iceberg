@@ -18,7 +18,7 @@ use std::io::{BufReader, Read};
 use std::path::Path;
 
 /// Manifest content type
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 pub enum ManifestContent {
     /// Data manifest (contains DataFile entries)
     Data,
@@ -27,7 +27,7 @@ pub enum ManifestContent {
 }
 
 /// Manifest metadata from Avro file header
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
 pub struct ManifestMetadata {
     /// Schema JSON
     pub schema: Option<String>,
@@ -439,7 +439,7 @@ impl<R: Read> ManifestReader<R> {
 }
 
 /// Statistics from manifest reading
-#[derive(Debug, Clone, Default)]
+#[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
 pub struct ManifestReadStats {
     /// Total entries processed
     pub total_entries: u64,
