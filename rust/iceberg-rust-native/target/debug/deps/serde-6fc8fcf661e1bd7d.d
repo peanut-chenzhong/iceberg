@@ -1,0 +1,14 @@
+D:\work\github\iceberg\rust\iceberg-rust-native\target\debug\deps\serde-6fc8fcf661e1bd7d.d: C:\Users\Peanut\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\lib.rs C:\Users\Peanut\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\integer128.rs C:\Users\Peanut\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\mod.rs C:\Users\Peanut\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\de.rs C:\Users\Peanut\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\ser.rs D:\work\github\iceberg\rust\iceberg-rust-native\target\debug\build\serde-80524569a08537cd\out/private.rs
+
+D:\work\github\iceberg\rust\iceberg-rust-native\target\debug\deps\libserde-6fc8fcf661e1bd7d.rlib: C:\Users\Peanut\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\lib.rs C:\Users\Peanut\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\integer128.rs C:\Users\Peanut\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\mod.rs C:\Users\Peanut\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\de.rs C:\Users\Peanut\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\ser.rs D:\work\github\iceberg\rust\iceberg-rust-native\target\debug\build\serde-80524569a08537cd\out/private.rs
+
+D:\work\github\iceberg\rust\iceberg-rust-native\target\debug\deps\libserde-6fc8fcf661e1bd7d.rmeta: C:\Users\Peanut\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\lib.rs C:\Users\Peanut\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\integer128.rs C:\Users\Peanut\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\mod.rs C:\Users\Peanut\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\de.rs C:\Users\Peanut\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\ser.rs D:\work\github\iceberg\rust\iceberg-rust-native\target\debug\build\serde-80524569a08537cd\out/private.rs
+
+C:\Users\Peanut\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\lib.rs:
+C:\Users\Peanut\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\integer128.rs:
+C:\Users\Peanut\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\mod.rs:
+C:\Users\Peanut\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\de.rs:
+C:\Users\Peanut\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\ser.rs:
+D:\work\github\iceberg\rust\iceberg-rust-native\target\debug\build\serde-80524569a08537cd\out/private.rs:
+
+# env-dep:OUT_DIR=D:\\work\\github\\iceberg\\rust\\iceberg-rust-native\\target\\debug\\build\\serde-80524569a08537cd\\out

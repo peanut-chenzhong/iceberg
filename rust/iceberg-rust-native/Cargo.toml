@@ -1,0 +1,62 @@
+[package]
+name = "iceberg-rust-native"
+version = "0.1.0"
+edition = "2021"
+authors = ["Apache Iceberg Contributors"]
+description = "High-performance native Rust implementation of Apache Iceberg core components"
+license = "Apache-2.0"
+repository = "https://github.com/apache/iceberg"
+keywords = ["iceberg", "data-lake", "parquet", "avro"]
+categories = ["database", "filesystem"]
+
+[dependencies]
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+apache-avro = "0.16"
+
+# Collections and utilities
+rustc-hash = "1.1"          # Fast hash maps (FxHashMap)
+smallvec = { version = "1.11", features = ["serde"] }
+bytes = "1.5"
+uuid = { version = "1.6", features = ["v4", "serde"] }
+
+# Error handling
+thiserror = "1.0"
+anyhow = "1.0"
+
+# Async and I/O
+tokio = { version = "1.35", features = ["rt-multi-thread", "fs", "io-util"] }
+futures = "0.3"
+
+# Parallel processing
+rayon = "1.8"
+crossbeam-channel = "0.5"
+
+# Arrow ecosystem (for future integration)
+arrow = { version = "52", optional = true }
+
+# Logging
+tracing = "0.1"
+
+[dev-dependencies]
+criterion = { version = "0.5", features = ["html_reports"] }
+tempfile = "3.9"
+rand = "0.8"
+pretty_assertions = "1.4"
+
+[features]
+default = []
+arrow = ["dep:arrow"]
+
+[[bench]]
+name = "manifest_reader"
+harness = false
+
+[profile.release]
+lto = true
+codegen-units = 1
+panic = "abort"
+
+[profile.bench]
+lto = true

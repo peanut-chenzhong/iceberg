@@ -75,3 +75,4 @@ derby.log
 
 # sdkman
 .sdkmanrc
+/rust/iceberg-rust-native/target/
