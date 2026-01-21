@@ -69,3 +69,4 @@ derby.log
 
 # jenv
 .java-version
+/iceberg-rust-lib/target/
