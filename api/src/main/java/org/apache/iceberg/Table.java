@@ -138,6 +138,37 @@ public interface Table {
   Map<Integer, SortOrder> sortOrders();
 
   /**
+   * Return the current {@link ClusteringSpec clustering spec} for this table, or an unclustered
+   * spec if clustering is not enabled.
+   *
+   * @return this table's clustering spec
+   */
+  default ClusteringSpec clusteringSpec() {
+    return ClusteringSpec.unclustered();
+  }
+
+  /**
+   * Return a map of clustering spec IDs to {@link ClusteringSpec clustering specs} for this table.
+   *
+   * @return this table's clustering specs map
+   */
+  default Map<Integer, ClusteringSpec> clusteringSpecs() {
+    return java.util.Collections.singletonMap(
+        ClusteringSpec.UNCLUSTERED_SPEC_ID, ClusteringSpec.unclustered());
+  }
+
+  /**
+   * Create a new {@link UpdateClusteringSpec} to update the clustering spec of this table and
+   * commit the change.
+   *
+   * @return a new {@link UpdateClusteringSpec}
+   */
+  default UpdateClusteringSpec updateClusteringSpec() {
+    throw new UnsupportedOperationException(
+        "Updating clustering spec is not supported by " + getClass().getName());
+  }
+
+  /**
    * Return a map of string properties for this table.
    *
    * @return this table's properties map

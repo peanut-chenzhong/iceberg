@@ -120,11 +120,37 @@ public interface DataFile extends ContentFile<DataFile> {
           LongType.get(),
           "The length of referenced content stored in the file");
 
+  // Liquid Clustering fields
+  Types.NestedField CLUSTERING_PROVIDER =
+      optional(
+          146,
+          "clustering_provider",
+          StringType.get(),
+          "The clustering implementation that produced this file (e.g., 'liquid')");
+  Types.NestedField ZCUBE_ID =
+      optional(
+          147,
+          "zcube_id",
+          StringType.get(),
+          "UUID of the ZCube this file belongs to");
+  Types.NestedField ZCUBE_COLUMNS =
+      optional(
+          148,
+          "zcube_columns",
+          ListType.ofRequired(149, StringType.get()),
+          "The column names used for clustering when this file was created");
+  Types.NestedField CLUSTERING_SPEC_ID =
+      optional(
+          150,
+          "clustering_spec_id",
+          IntegerType.get(),
+          "The clustering spec ID when this file was created");
+
   int PARTITION_ID = 102;
   String PARTITION_NAME = "partition";
   String PARTITION_DOC = "Partition data tuple, schema based on the partition spec";
 
-  // NEXT ID TO ASSIGN: 146
+  // NEXT ID TO ASSIGN: 151
 
   static StructType getType(StructType partitionType) {
     // IDs start at 100 to leave room for changes to ManifestEntry

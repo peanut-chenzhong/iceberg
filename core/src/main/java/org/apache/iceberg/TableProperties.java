@@ -394,4 +394,25 @@ public class TableProperties {
   public static final int ENCRYPTION_DEK_LENGTH_DEFAULT = 16;
 
   public static final int ENCRYPTION_AAD_LENGTH_DEFAULT = 16;
+
+  // Liquid Clustering properties
+  public static final String CLUSTERING_ENABLED = "clustering.enabled";
+  public static final boolean CLUSTERING_ENABLED_DEFAULT = false;
+
+  public static final String CLUSTERING_COLUMNS = "clustering.columns";
+
+  public static final String CLUSTERING_ALGORITHM = "clustering.algorithm";
+  public static final String CLUSTERING_ALGORITHM_DEFAULT = "hilbert";
+
+  public static final String CLUSTERING_TARGET_ZCUBE_SIZE_BYTES = "clustering.target-zcube-size-bytes";
+  public static final long CLUSTERING_TARGET_ZCUBE_SIZE_BYTES_DEFAULT = 512L * 1024 * 1024; // 512 MB
+
+  public static final String CLUSTERING_MIN_ZCUBE_SIZE_BYTES = "clustering.min-zcube-size-bytes";
+  public static final long CLUSTERING_MIN_ZCUBE_SIZE_BYTES_DEFAULT = 128L * 1024 * 1024; // 128 MB
+
+  public static final String CLUSTERING_MAX_COLUMNS = "clustering.max-columns";
+  public static final int CLUSTERING_MAX_COLUMNS_DEFAULT = 4;
+
+  public static final String CLUSTERING_PROVIDER = "clustering.provider";
+  public static final String CLUSTERING_PROVIDER_LIQUID = "liquid";
 }

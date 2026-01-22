@@ -146,6 +146,21 @@ public class RewriteDataFilesSparkAction
     return this;
   }
 
+  /**
+   * Configures this action to use Hilbert curve ordering for data clustering.
+   *
+   * <p>Hilbert curves provide better locality preservation compared to Z-Order curves, especially
+   * for high-dimensional data. This is the default algorithm used by Liquid Clustering.
+   *
+   * @param columnNames the columns to use for Hilbert ordering
+   * @return this for method chaining
+   */
+  public RewriteDataFilesSparkAction hilbert(String... columnNames) {
+    ensureRunnerNotSet();
+    this.runner = new SparkHilbertFileRewriteRunner(spark(), table, Arrays.asList(columnNames));
+    return this;
+  }
+
   private void ensureRunnerNotSet() {
     Preconditions.checkArgument(
         runner == null,

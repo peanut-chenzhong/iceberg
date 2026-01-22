@@ -35,9 +35,11 @@ import org.apache.spark.sql.catalyst.plans.logical.DropIdentifierFields
 import org.apache.spark.sql.catalyst.plans.logical.DropPartitionField
 import org.apache.spark.sql.catalyst.plans.logical.DropTag
 import org.apache.spark.sql.catalyst.plans.logical.LogicalPlan
+import org.apache.spark.sql.catalyst.plans.logical.OptimizeTable
 import org.apache.spark.sql.catalyst.plans.logical.OrderAwareCoalesce
 import org.apache.spark.sql.catalyst.plans.logical.RenameTable
 import org.apache.spark.sql.catalyst.plans.logical.ReplacePartitionField
+import org.apache.spark.sql.catalyst.plans.logical.SetClusteringColumns
 import org.apache.spark.sql.catalyst.plans.logical.SetIdentifierFields
 import org.apache.spark.sql.catalyst.plans.logical.SetViewProperties
 import org.apache.spark.sql.catalyst.plans.logical.SetWriteDistributionAndOrdering
@@ -114,6 +116,12 @@ case class ExtendedDataSourceV2Strategy(spark: SparkSession) extends Strategy wi
           distributionMode,
           ordering) =>
       SetWriteDistributionAndOrderingExec(catalog, ident, distributionMode, ordering) :: Nil
+
+    case SetClusteringColumns(IcebergCatalogAndIdentifier(catalog, ident), columns, options) =>
+      SetClusteringColumnsExec(catalog, ident, columns, options) :: Nil
+
+    case OptimizeTable(IcebergCatalogAndIdentifier(catalog, ident), isFull) =>
+      OptimizeTableExec(catalog, ident, isFull) :: Nil
 
     case OrderAwareCoalesce(numPartitions, coalescer, child) =>
       OrderAwareCoalesceExec(numPartitions, coalescer, planLater(child)) :: Nil

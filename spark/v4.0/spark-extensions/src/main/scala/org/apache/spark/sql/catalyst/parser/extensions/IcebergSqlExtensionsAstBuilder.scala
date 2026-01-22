@@ -39,12 +39,15 @@ import org.apache.spark.sql.catalyst.plans.logical.AddPartitionField
 import org.apache.spark.sql.catalyst.plans.logical.BranchOptions
 import org.apache.spark.sql.catalyst.plans.logical.CreateOrReplaceBranch
 import org.apache.spark.sql.catalyst.plans.logical.CreateOrReplaceTag
+import org.apache.spark.sql.catalyst.plans.logical.ClusteringOptions
 import org.apache.spark.sql.catalyst.plans.logical.DropBranch
 import org.apache.spark.sql.catalyst.plans.logical.DropIdentifierFields
 import org.apache.spark.sql.catalyst.plans.logical.DropPartitionField
 import org.apache.spark.sql.catalyst.plans.logical.DropTag
 import org.apache.spark.sql.catalyst.plans.logical.LogicalPlan
+import org.apache.spark.sql.catalyst.plans.logical.OptimizeTable
 import org.apache.spark.sql.catalyst.plans.logical.ReplacePartitionField
+import org.apache.spark.sql.catalyst.plans.logical.SetClusteringColumns
 import org.apache.spark.sql.catalyst.plans.logical.SetIdentifierFields
 import org.apache.spark.sql.catalyst.plans.logical.SetWriteDistributionAndOrdering
 import org.apache.spark.sql.catalyst.plans.logical.TagOptions
@@ -215,6 +218,61 @@ class IcebergSqlExtensionsAstBuilder(delegate: ParserInterface)
         typedVisit[Seq[String]](ctx.multipartIdentifier),
         toSeq(ctx.fieldList.fields).map(_.getText))
     }
+
+  /**
+   * Create a SET CLUSTERING COLUMNS logical command.
+   */
+  override def visitSetClusteringColumns(ctx: SetClusteringColumnsContext): SetClusteringColumns =
+    withOrigin(ctx) {
+      val tableName = typedVisit[Seq[String]](ctx.multipartIdentifier)
+      val clusterBySpec = ctx.clusterBySpec()
+
+      clusterBySpec match {
+        case none: ClusterByNoneContext =>
+          SetClusteringColumns(tableName, Seq.empty, ClusteringOptions.empty)
+        case cols: ClusterByColumnsContext =>
+          val columns = toSeq(cols.columns).map(col => typedVisit[Seq[String]](col).mkString("."))
+          val options = Option(cols.clusteringOptions())
+            .map(parseClusteringOptions)
+            .getOrElse(ClusteringOptions.empty)
+          SetClusteringColumns(tableName, columns, options)
+      }
+    }
+
+  private def parseClusteringOptions(ctx: ClusteringOptionsContext): ClusteringOptions = {
+    var algorithm: Option[String] = None
+    var targetSize: Option[Long] = None
+    var minSize: Option[Long] = None
+
+    toSeq(ctx.clusteringOption()).foreach { opt =>
+      if (opt.ALGORITHM() != null) {
+        algorithm = Some(opt.algorithmName.getText.toLowerCase(Locale.ENGLISH))
+      } else if (opt.TARGET() != null) {
+        targetSize = Some(parseSizeBytes(opt.number().getText.toLong, opt.sizeUnit()))
+      } else if (opt.MIN() != null) {
+        minSize = Some(parseSizeBytes(opt.number().getText.toLong, opt.sizeUnit()))
+      }
+    }
+
+    ClusteringOptions(algorithm, targetSize, minSize)
+  }
+
+  private def parseSizeBytes(value: Long, unit: SizeUnitContext): Long = {
+    if (unit.BYTES() != null) value
+    else if (unit.KB() != null) value * 1024
+    else if (unit.MB() != null) value * 1024 * 1024
+    else if (unit.GB() != null) value * 1024 * 1024 * 1024
+    else value
+  }
+
+  /**
+   * Create an OPTIMIZE TABLE logical command.
+   */
+  override def visitOptimizeTable(ctx: OptimizeTableContext): OptimizeTable = withOrigin(ctx) {
+    val tableName = typedVisit[Seq[String]](ctx.multipartIdentifier)
+    val isFull = ctx.FULL() != null
+    OptimizeTable(tableName, isFull)
+  }
 
   /**
    * Create a [[SetWriteDistributionAndOrdering]] for changing the write distribution and ordering.

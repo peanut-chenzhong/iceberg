@@ -175,6 +175,40 @@ public interface ContentFile<F> {
   }
 
   /**
+   * Returns the clustering provider that produced this file, or null if the file is not clustered.
+   *
+   * <p>For liquid clustering, this returns "liquid".
+   */
+  default String clusteringProvider() {
+    return null;
+  }
+
+  /**
+   * Returns the ZCube ID this file belongs to, or null if the file is not clustered.
+   *
+   * <p>Files in the same ZCube share the same clustering properties and were clustered together.
+   */
+  default String zCubeId() {
+    return null;
+  }
+
+  /**
+   * Returns the list of column names used for clustering when this file was created, or null if the
+   * file is not clustered.
+   */
+  default List<String> zCubeColumns() {
+    return null;
+  }
+
+  /**
+   * Returns the clustering spec ID when this file was created, or null if the file is not
+   * clustered.
+   */
+  default Integer clusteringSpecId() {
+    return null;
+  }
+
+  /**
    * Copies this file. Manifest readers can reuse file instances; use this method to copy data when
    * collecting files from tasks.
    *

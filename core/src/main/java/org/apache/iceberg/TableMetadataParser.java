@@ -113,6 +113,8 @@ public class TableMetadataParser {
   static final String PARTITION_STATISTICS = "partition-statistics";
   static final String ENCRYPTION_KEYS = "encryption-keys";
   static final String NEXT_ROW_ID = "next-row-id";
+  static final String CLUSTERING_SPECS = "clustering-specs";
+  static final String DEFAULT_CLUSTERING_SPEC_ID = "default-clustering-spec-id";
   static final int MIN_NULL_CURRENT_SNAPSHOT_VERSION = 3;
 
   public static void overwrite(TableMetadata metadata, OutputFile outputFile) {
@@ -213,6 +215,17 @@ public class TableMetadataParser {
       SortOrderParser.toJson(sortOrder, generator);
     }
     generator.writeEndArray();
+
+    // write the default clustering spec ID and clustering spec list
+    if (metadata.defaultClusteringSpecId() != ClusteringSpec.UNCLUSTERED_SPEC_ID
+        || !metadata.clusteringSpecs().isEmpty()) {
+      generator.writeNumberField(DEFAULT_CLUSTERING_SPEC_ID, metadata.defaultClusteringSpecId());
+      generator.writeArrayFieldStart(CLUSTERING_SPECS);
+      for (ClusteringSpec clusteringSpec : metadata.clusteringSpecs()) {
+        ClusteringSpecParser.toJson(clusteringSpec, generator);
+      }
+      generator.writeEndArray();
+    }
 
     // write properties map
     JsonUtil.writeStringMap(PROPERTIES, metadata.properties(), generator);

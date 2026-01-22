@@ -76,6 +76,8 @@ statement
     | ALTER TABLE multipartIdentifier createReplaceTagClause                                #createOrReplaceTag
     | ALTER TABLE multipartIdentifier DROP BRANCH (IF EXISTS)? identifier                   #dropBranch
     | ALTER TABLE multipartIdentifier DROP TAG (IF EXISTS)? identifier                      #dropTag
+    | ALTER TABLE multipartIdentifier CLUSTER BY clusterBySpec                              #setClusteringColumns
+    | OPTIMIZE multipartIdentifier (FULL)?                                                  #optimizeTable
     ;
 
 createReplaceTagClause
@@ -125,6 +127,28 @@ writeDistributionSpec
 writeOrderingSpec
     : LOCALLY? ORDERED BY order
     | UNORDERED
+    ;
+
+clusterBySpec
+    : NONE                                                      #clusterByNone
+    | '(' columns+=multipartIdentifier (',' columns+=multipartIdentifier)* ')' (clusteringOptions)?  #clusterByColumns
+    ;
+
+clusteringOptions
+    : WITH clusteringOption (clusteringOption)*
+    ;
+
+clusteringOption
+    : ALGORITHM '=' algorithmName=identifier
+    | TARGET SIZE number sizeUnit
+    | MIN SIZE number sizeUnit
+    ;
+
+sizeUnit
+    : BYTES
+    | KB
+    | MB
+    | GB
     ;
 
 singleOrder
@@ -211,6 +235,7 @@ nonReserved
     | DISTRIBUTED | LOCALLY | MINUTES | MONTHS | UNORDERED | REPLACE | RETAIN | VERSION | WITH | IDENTIFIER_KW | FIELDS | SET | SNAPSHOT | SNAPSHOTS
     | TAG | TRUE | FALSE
     | MAP
+    | CLUSTER | NONE | OPTIMIZE | FULL | ALGORITHM | TARGET | MIN | SIZE | BYTES | KB | MB | GB
     ;
 
 snapshotId
@@ -273,6 +298,20 @@ FALSE: 'FALSE';
 
 MAP: 'MAP';
 ARRAY: 'ARRAY';
+
+// Liquid Clustering keywords
+CLUSTER: 'CLUSTER';
+NONE: 'NONE';
+OPTIMIZE: 'OPTIMIZE';
+FULL: 'FULL';
+ALGORITHM: 'ALGORITHM';
+TARGET: 'TARGET';
+MIN: 'MIN';
+SIZE: 'SIZE';
+BYTES: 'BYTES';
+KB: 'KB';
+MB: 'MB';
+GB: 'GB';
 
 PLUS: '+';
 MINUS: '-';
